@@ -27,5 +27,7 @@
     "declarationMap": true,
     "sourceMap": true,
     "jsx": "react-jsx"
-  }
+  },
+  "include": ["./src", "./scripts", "./test", "./deploy", "./gascalc", "./typechain-types"],
+  "files": ["./hardhat.config.ts"]
 }
