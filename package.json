@@ -3,6 +3,10 @@
   "version": "0.6.0",
   "description": "ERC-4337 Account Abstraction Implementation",
   "scripts": {
+    "hardhat-clean": "hardhat clean",
+    "hardhat-compile": "hardhat compile",
+    "hardhat-test": "hardhat test",
+    "hardhat-deploy": "hardhat deploy",
     "clean": "rm -rf cache artifacts typechain typechain-types",
     "compile": "./scripts/hh-wrapper compile",
     "tsc": "tsc",
