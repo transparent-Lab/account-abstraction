@@ -13,6 +13,7 @@ import {
 import { DefaultDelayBlock, createAccountOwner, createAddress, ONE_ETH, createTSPAccount } from './tsp-utils.test'
 
 describe('TSPAccount', function () {
+  const inviter = '0x'.padEnd(42, '0')
   let accounts: string[]
   let token: TestToken
   const signer = ethers.provider.getSigner()
@@ -49,7 +50,7 @@ describe('TSPAccount', function () {
     accountOwner = createAccountOwner()
     await signer.sendTransaction({ from: accounts[0], to: accountOwner.address, value: parseEther('1').toString() })
     // 4.create account
-    const { proxy: account } = await createTSPAccount(signer, accountOwner.address, entryPoint, guardian, factory)
+    const { proxy: account } = await createTSPAccount(signer, accountOwner.address, entryPoint, guardian, inviter, factory)
     // const account = TSPAccount__factory.connect(accountOwner.address, signer)
     // 5.register this account in the guardian contract
     // await guardian.register(account.address, { gasLimit: 10000000 })

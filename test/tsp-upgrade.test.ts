@@ -16,6 +16,7 @@ import {
   createAccountOwner
 } from './tsp-utils.test'
 describe('TSPAccount Upgrade', function () {
+  const inviter = '0x'.padEnd(42, '0')
   const entryPoint = '0x'.padEnd(42, '2')
   let accounts: string[]
   let factory: TSPAccountFactory
@@ -30,8 +31,8 @@ describe('TSPAccount Upgrade', function () {
 
   it('can upgrade the TSPAccount contract', async () => {
     const accountOwner = createAccountOwner()
-    await factory.createAccount(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian])
-    const addr1 = await factory.getAddress(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian])
+    await factory.createAccount(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], inviter)
+    const addr1 = await factory.getAddress(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], inviter)
     const account = TSPAccount__factory.connect(addr1, accountOwner)
     await signer.sendTransaction({ from: accounts[0], to: accountOwner.address, value: parseEther('1') })
     expect(await account.connect(signer).getVersion()).to.be.equals(1)
@@ -42,8 +43,8 @@ describe('TSPAccount Upgrade', function () {
 
   it('can upgrade the TSPAccount contract', async () => {
     const accountOwner = createAccountOwner()
-    await factory.createAccount(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian])
-    const accountAddress = await factory.getAddress(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian])
+    await factory.createAccount(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], inviter)
+    const accountAddress = await factory.getAddress(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], inviter)
     const account = TSPAccount__factory.connect(accountAddress, accountOwner)
     await signer.sendTransaction({ from: accounts[0], to: accountOwner.address, value: parseEther('1') })
     await signer.sendTransaction({ from: accounts[0], to: accountAddress, value: parseEther('5') })
