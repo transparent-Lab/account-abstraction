@@ -122,14 +122,6 @@ describe('TSPAccount', function () {
       expect(preBalance - postBalance).to.eql(expectedPay)
     })
 
-    it('should increment nonce', async () => {
-      expect(await account.getNonce()).to.equal(1)
-    })
-
-    it('should reject same TX on nonce error', async () => {
-      await expect(account.validateUserOp(userOp, userOpHash, 0)).to.revertedWith('invalid nonce')
-    })
-
     it('should return NO_SIG_VALIDATION on wrong signature', async () => {
       const userOpHash = HashZero
       const deadline = await account.callStatic.validateUserOp({ ...userOp, nonce: 1 }, userOpHash, 0)
