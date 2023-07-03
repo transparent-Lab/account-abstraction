@@ -32,7 +32,8 @@ contract TSPAccountFactory {
         address guardian,
         uint256 threshold,
         uint256 guardianDelay,
-        address[] memory guardians
+        address[] memory guardians,
+        address inviter
     ) public returns (TSPAccount ret) {
         address addr = getAddress(
             owner,
@@ -40,7 +41,8 @@ contract TSPAccountFactory {
             guardian,
             threshold,
             guardianDelay,
-            guardians
+            guardians,
+            inviter
         );
         uint codeSize = addr.code.length;
         if (codeSize > 0) {
@@ -53,7 +55,7 @@ contract TSPAccountFactory {
                     address(accountImplementation),
                     abi.encodeCall(
                         TSPAccount.initialize,
-                        (owner, guardian, threshold, guardianDelay, guardians)
+                        (owner, guardian, threshold, guardianDelay, guardians, inviter)
                     )
                 )
             )
@@ -69,7 +71,8 @@ contract TSPAccountFactory {
         address guardian,
         uint256 threshold,
         uint256 guardianDelay,
-        address[] memory guardians
+        address[] memory guardians,
+        address inviter
     ) public view returns (address) {
         return
             Create2.computeAddress(
@@ -86,7 +89,8 @@ contract TSPAccountFactory {
                                     guardian,
                                     threshold,
                                     guardianDelay,
-                                    guardians
+                                    guardians,
+                                    inviter
                                 )
                             )
                         )
