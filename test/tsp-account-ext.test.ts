@@ -39,11 +39,6 @@ describe('TSPAccount Extension Functions Test', function () {
       const events = await firstTspAccount.queryFilter(eventFilter)
       expect(events.length).to.be.equals(1)
     })
-    it('#inviter cant be set as eoa except 0x0..0', async () => {
-      const eoaInviter = '0x'.padEnd(42, '1')
-      // create second tsp account, owner is accounts[1]
-      await expect(createTSPAccount(ethersSigner, accounts[1], mockEntryPoint, guardian, eoaInviter)).to.revertedWith('inviter is not a contract')
-    })
   })
   describe('Metadata Test', function () {
     const defaultInviter = '0x'.padEnd(42, '0')

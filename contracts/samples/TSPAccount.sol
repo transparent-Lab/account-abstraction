@@ -8,7 +8,6 @@ pragma solidity ^0.8.12;
 import "../interfaces/ITSPAccount.sol";
 import "./SimpleAccount.sol";
 import "../interfaces/IGuardian.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
 
 /**
  * minimal account.
@@ -119,8 +118,6 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
             IGuardian.GuardianConfig(guardians, threshold, guardianDelay)
         );
         if(inviter != address(0)) {
-            // inviter should be a contract
-            require(Address.isContract(inviter), "inviter is not a contract");
             // self-invite is not allowed
             require(inviter != address(this), "inviter is oneself");
         }
