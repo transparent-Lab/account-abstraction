@@ -28,7 +28,9 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
 
     mapping(string => string) private _metadata;
 
-    event inviterInitialized(address indexed inviter, address indexed invitee);
+    event InviterInitialized(address indexed inviter, address indexed invitee);
+
+    event SetMetadata(string indexed key, string indexed value);
 
     constructor(IEntryPoint anEntryPoint) SimpleAccount(anEntryPoint) {}
 
@@ -84,6 +86,7 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
             delete _metadata[key];
         }
         _metadata[key] = value;
+        emit SetMetadata(key, value);
     }
 
     // Get user custom data
@@ -122,7 +125,7 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
             require(inviter != address(this), "inviter is oneself");
         }
         _inviter = inviter;
-        emit inviterInitialized(inviter, address(this));
+        emit InviterInitialized(inviter, address(this));
     }
 
     function changeGuardian(address guardian) public onlyOwner {
