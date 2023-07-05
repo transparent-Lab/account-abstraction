@@ -8,7 +8,6 @@ pragma solidity ^0.8.12;
 import "../interfaces/ITSPAccount.sol";
 import "./SimpleAccount.sol";
 import "../interfaces/IGuardian.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
 
 /**
  * minimal account.
@@ -23,12 +22,7 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
     // a guardian contract through which the owner can modify the guardian and multi-signature rules
     address private _guardian;
 
-    // the inviter of this account
-    address private _inviter;
-
     mapping(string => string) private _metadata;
-
-    event InviterInitialized(address indexed inviter, address indexed invitee);
 
     event SetMetadata(string indexed key, string indexed value);
 
@@ -53,10 +47,6 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
 
     function getOperator() public view returns (address) {
         return _operator;
-    }
-
-    function getInviter() public view returns (address) {
-        return _inviter;
     }
 
     function _requireOwnerOrGuardian() internal view {
@@ -109,8 +99,7 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
         address guardian,
         uint256 threshold,
         uint256 guardianDelay,
-        address[] memory guardians,
-        address inviter
+        address[] memory guardians
     ) public initializer {
         _initialize(anOwner);
         _changeGuardian(guardian);
@@ -118,14 +107,6 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
             address(this),
             IGuardian.GuardianConfig(guardians, threshold, guardianDelay)
         );
-        if(inviter != address(0)) {
-            // inviter should be a contract
-            require(Address.isContract(inviter), "inviter is not a contract");
-            // self-invite is not allowed
-            require(inviter != address(this), "inviter is oneself");
-        }
-        _inviter = inviter;
-        emit InviterInitialized(inviter, address(this));
     }
 
     function changeGuardian(address guardian) public onlyOwner {
