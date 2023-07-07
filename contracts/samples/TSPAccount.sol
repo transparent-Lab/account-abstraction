@@ -22,7 +22,12 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
     // a guardian contract through which the owner can modify the guardian and multi-signature rules
     address private _guardian;
 
+    // the inviter of this account
+    address private _inviter;
+
     mapping(string => string) private _metadata;
+
+    event InviterInitialized(address indexed inviter, address indexed invitee);
 
     event SetMetadata(string indexed key, string indexed value);
 
@@ -47,6 +52,10 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
 
     function getOperator() public view returns (address) {
         return _operator;
+    }
+
+    function getInviter() public view returns (address) {
+        return _inviter;
     }
 
     function _requireOwnerOrGuardian() internal view {
@@ -99,7 +108,8 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
         address guardian,
         uint256 threshold,
         uint256 guardianDelay,
-        address[] memory guardians
+        address[] memory guardians,
+        address inviter
     ) public initializer {
         _initialize(anOwner);
         _changeGuardian(guardian);
@@ -107,6 +117,12 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
             address(this),
             IGuardian.GuardianConfig(guardians, threshold, guardianDelay)
         );
+        if(inviter != address(0)) {
+            // self-invite is not allowed
+            require(inviter != address(this), "inviter is oneself");
+        }
+        _inviter = inviter;
+        emit InviterInitialized(inviter, address(this));
     }
 
     function changeGuardian(address guardian) public onlyOwner {
