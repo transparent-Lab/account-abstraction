@@ -24,13 +24,13 @@ contract Guardian is IGuardian {
         _requireAccountOwner(account);
         // Check the legality of the configuration
         require(
-            config.approveThreshold > 0 && config.approveThreshold <= 100,
-            "The threshold value must be a value greater than 0 and less than or equal to 100"
+            config.approveThreshold > 0 && config.approveThreshold <= config.guardians.length,
+            "The threshold must be greater than 0 and less than or equal to the number of guardians"
         );
         require(config.guardians.length <= 5, "Up to 5 guardians");
         require(
             config.delay > 0,
-            "the number of delayed verification blocks 0 must be greater than or equal to 1"
+            "The number of delayed verification blocks must be greater than or equal to 1"
         );
         _cabinet[account] = config;
         emit ChangeGuardianConfig(
@@ -44,7 +44,7 @@ contract Guardian is IGuardian {
     // Owner authorized to modify the wallet
     function approve(address account, address newAddress) public {
         // Whether the verification is the guardian of the current account
-        require(newAddress != address(0), "new owner is the zero address");
+        require(newAddress != address(0), "The new owner cannot be a zero address");
         require(
             isAddressInArray(_cabinet[account].guardians, msg.sender),
             "you are not a guardian"
@@ -112,9 +112,7 @@ contract Guardian is IGuardian {
         address account
     ) private view returns (address first, uint256 progress) {
         IGuardian.GuardianConfig memory config = _cabinet[account];
-        // if (config.guardians.length > 0) {
-        //     return 0;
-        // }
+        
         uint256 n = 0;
         for (uint256 i = 0; i < config.guardians.length; i++) {
             address guardian = config.guardians[i];
@@ -127,7 +125,7 @@ contract Guardian is IGuardian {
                 n += 1;
             }
         }
-        return (first, n.mul(100).div(config.guardians.length));
+        return (first, n);
     }
 
     function isAddressInArray(

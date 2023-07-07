@@ -112,7 +112,7 @@ describe('TSPAccount: tsp.test.ts', function () {
     expect(await token.balanceOf(account.address)).to.be.equals(parseEther('40'))
 
     // 20.New owner modifying guardians, threshold values, and number of delay blocks
-    await guardian.connect(newOwner).setConfig(account.address, { guardians: accounts.slice(1, 4), approveThreshold: 50, delay: DefaultDelayBlock })
+    await guardian.connect(newOwner).setConfig(account.address, { guardians: accounts.slice(1, 4), approveThreshold: 2, delay: DefaultDelayBlock })
 
     // 21.Guardian 1 authorizes the owner 2 address as the new owner of the AA account
     await guardian.connect(g1).approve(account.address, newOwner2.address)
