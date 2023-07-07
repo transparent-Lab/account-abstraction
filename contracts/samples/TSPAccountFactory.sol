@@ -16,33 +16,8 @@ import "./Guardian.sol";
 contract TSPAccountFactory {
     TSPAccount public immutable accountImplementation;
 
-    mapping (address => bytes32) public referralCodes;
-    mapping (bytes32 => address) public codeOwners;
-
-    // invitee -> inviter
-    mapping (address => address) public inviters;
-
-    event SetReferralCode(address indexed owner, bytes32 indexed oldCode, bytes32 indexed newCode);
-    event Invite(address indexed inviter, address indexed invitee);
-
     constructor(IEntryPoint _entryPoint) {
         accountImplementation = new TSPAccount(_entryPoint);
-    }
-
-    function setReferralCode(bytes32 code) external {
-        require(code != bytes32(0), "TSPAccountFactory: invalid referralCode");
-        require(referralCodes[msg.sender] != bytes32(0), "TSPAccountFactory: account not exists");
-        require(codeOwners[code] == address(0), "TSPAccountFactory: code exists");
-
-        // delete old code
-        bytes32 oldCode = referralCodes[msg.sender];
-        if(oldCode != bytes32(0)) {
-            delete codeOwners[oldCode];
-        }
-
-        referralCodes[msg.sender] = code;
-        codeOwners[code] = msg.sender;
-        emit SetReferralCode(msg.sender, oldCode, code);
     }
 
     /**
@@ -58,27 +33,16 @@ contract TSPAccountFactory {
         uint256 threshold,
         uint256 guardianDelay,
         address[] memory guardians,
-        bytes32 referralCode,
-        bytes32 inviterReferralCode
+        address inviter
     ) public returns (TSPAccount ret) {
-        // check referralCode
-        require(referralCode != bytes32(0), "TSPAccountFactory: invalid referralCode");
-        require(codeOwners[referralCode] == address(0), "TSPAccountFactory: referralCode exists");
-
-        // check inviterReferralCode
-        address inviter = address(0);
-        if(inviterReferralCode != bytes32(0)) {
-            require(codeOwners[inviterReferralCode] != address(0), "TSPAccountFactory: inviterReferralCode not exists");
-            inviter = codeOwners[inviterReferralCode];
-        }
-
         address addr = getAddress(
             owner,
             salt,
             guardian,
             threshold,
             guardianDelay,
-            guardians
+            guardians,
+            inviter
         );
         uint codeSize = addr.code.length;
         if (codeSize > 0) {
@@ -91,23 +55,11 @@ contract TSPAccountFactory {
                     address(accountImplementation),
                     abi.encodeCall(
                         TSPAccount.initialize,
-                        (owner, guardian, threshold, guardianDelay, guardians)
+                        (owner, guardian, threshold, guardianDelay, guardians, inviter)
                     )
                 )
             )
         );
-
-        addr = address(ret);
-        require(inviter != addr, "TSPAccountFactory: inviter is oneself");
-
-        // set referralCode
-        referralCodes[addr] = referralCode;
-        // set codeOwners
-        codeOwners[referralCode] = addr;
-        // set inviter
-        inviters[addr] = inviter;
-        emit Invite(inviter, addr);
-        emit SetReferralCode(addr, bytes32(0), referralCode);
     }
 
     /**
@@ -119,7 +71,8 @@ contract TSPAccountFactory {
         address guardian,
         uint256 threshold,
         uint256 guardianDelay,
-        address[] memory guardians
+        address[] memory guardians,
+        address inviter
     ) public view returns (address) {
         return
             Create2.computeAddress(
@@ -136,7 +89,8 @@ contract TSPAccountFactory {
                                     guardian,
                                     threshold,
                                     guardianDelay,
-                                    guardians
+                                    guardians,
+                                    inviter
                                 )
                             )
                         )

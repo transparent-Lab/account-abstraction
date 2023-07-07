@@ -15,8 +15,8 @@ export const DefaultThreshold = 1
 export const DefaultDelayBlock = 100
 
 // given the parameters as AccountDeployer, return the resulting "counterfactual address" that it would create.
-export async function getAccountAddress (owner: string, guardian: string, threshold: number, delay: number, guardians: string[], factory: TSPAccountFactory, salt = 0): Promise<string> {
-  return await factory.getAddress(owner, salt, guardian, threshold, delay, guardians)
+export async function getAccountAddress (owner: string, guardian: string, threshold: number, delay: number, guardians: string[], inviter: string, factory: TSPAccountFactory, salt = 0): Promise<string> {
+  return await factory.getAddress(owner, salt, guardian, threshold, delay, guardians, inviter)
 }
 
 // Deploys an implementation and a proxy pointing to this implementation
@@ -25,8 +25,7 @@ export async function createTSPAccount (
   accountOwner: string,
   entryPoint: string,
   guardian: Guardian,
-  referralCode: string,
-  inviterReferralCode?: string,
+  inviter: string,
   _factory?: TSPAccountFactory
 ):
   Promise<{
@@ -34,17 +33,10 @@ export async function createTSPAccount (
     accountFactory: TSPAccountFactory
     implementation: string
   }> {
-  const code = ethers.utils.formatBytes32String(referralCode)
-  let inviterCode
-  if (inviterReferralCode == null || inviterReferralCode.trim() === '') {
-    inviterCode = ethers.constants.HashZero
-  } else {
-    inviterCode = ethers.utils.formatBytes32String(inviterReferralCode)
-  }
   const accountFactory = _factory ?? await new TSPAccountFactory__factory(ethersSigner).deploy(entryPoint)
   const implementation = await accountFactory.accountImplementation()
-  await accountFactory.createAccount(accountOwner, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], code, inviterCode)
-  const accountAddress = await accountFactory.getAddress(accountOwner, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian])
+  await accountFactory.createAccount(accountOwner, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], inviter)
+  const accountAddress = await accountFactory.getAddress(accountOwner, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], inviter)
   const proxy = TSPAccount__factory.connect(accountAddress, ethersSigner)
   return {
     implementation,
@@ -59,8 +51,7 @@ export async function createTSPAccountAndRegister (
   accountOwner: string,
   entryPoint: string,
   guardian: Guardian,
-  referralCode: string,
-  inviterReferralCode?: string,
+  inviter: string,
   _factory?: TSPAccountFactory
 ):
   Promise<{
@@ -68,17 +59,10 @@ export async function createTSPAccountAndRegister (
     accountFactory: TSPAccountFactory
     implementation: string
   }> {
-  const code = ethers.utils.formatBytes32String(referralCode)
-  let inviterCode
-  if (inviterReferralCode == null || inviterReferralCode.trim() === '') {
-    inviterCode = ethers.constants.HashZero
-  } else {
-    inviterCode = ethers.utils.formatBytes32String(inviterReferralCode)
-  }
   const accountFactory = _factory ?? await new TSPAccountFactory__factory(ethersSigner).deploy(entryPoint)
   const implementation = await accountFactory.accountImplementation()
-  await accountFactory.createAccount(accountOwner, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], code, inviterCode)
-  const accountAddress = await accountFactory.getAddress(accountOwner, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian])
+  await accountFactory.createAccount(accountOwner, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], inviter)
+  const accountAddress = await accountFactory.getAddress(accountOwner, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], inviter)
   const proxy = TSPAccount__factory.connect(accountAddress, ethersSigner)
   // await guardian.register(accountAddress)
 

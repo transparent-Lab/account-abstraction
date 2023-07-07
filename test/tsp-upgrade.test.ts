@@ -16,9 +16,7 @@ import {
   createAccountOwner
 } from './tsp-utils.test'
 describe('TSPAccount Upgrade', function () {
-  const code1 = ethers.utils.formatBytes32String('referralCode1')
-  const code2 = ethers.utils.formatBytes32String('referralCode2')
-  // const inviter = '0x'.padEnd(42, '0')
+  const inviter = '0x'.padEnd(42, '0')
   const entryPoint = '0x'.padEnd(42, '2')
   let accounts: string[]
   let factory: TSPAccountFactory
@@ -31,11 +29,10 @@ describe('TSPAccount Upgrade', function () {
     guardian = await new Guardian__factory(signer).deploy()
   })
 
-  it('can upgrade the TSPAccount contract 1', async () => {
-    const inviterCode = ethers.constants.HashZero
+  it('can upgrade the TSPAccount contract', async () => {
     const accountOwner = createAccountOwner()
-    await factory.createAccount(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], code1, inviterCode)
-    const addr1 = await factory.getAddress(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian])
+    await factory.createAccount(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], inviter)
+    const addr1 = await factory.getAddress(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], inviter)
     const account = TSPAccount__factory.connect(addr1, accountOwner)
     await signer.sendTransaction({ from: accounts[0], to: accountOwner.address, value: parseEther('1') })
     expect(await account.connect(signer).getVersion()).to.be.equals(1)
@@ -44,11 +41,10 @@ describe('TSPAccount Upgrade', function () {
     expect(await account.getVersion()).to.be.equals(2)
   })
 
-  it('can upgrade the TSPAccount contract 2', async () => {
-    const inviterCode = ethers.constants.HashZero
+  it('can upgrade the TSPAccount contract', async () => {
     const accountOwner = createAccountOwner()
-    await factory.createAccount(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], code2, inviterCode)
-    const accountAddress = await factory.getAddress(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian])
+    await factory.createAccount(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], inviter)
+    const accountAddress = await factory.getAddress(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], inviter)
     const account = TSPAccount__factory.connect(accountAddress, accountOwner)
     await signer.sendTransaction({ from: accounts[0], to: accountOwner.address, value: parseEther('1') })
     await signer.sendTransaction({ from: accounts[0], to: accountAddress, value: parseEther('5') })
