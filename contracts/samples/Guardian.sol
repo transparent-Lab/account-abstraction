@@ -15,7 +15,7 @@ contract Guardian is IGuardian {
     // address public owner;
     mapping(address => IGuardian.GuardianConfig) private _cabinet;
     mapping(address => mapping(address => address)) private _approvesProgress;
-    mapping(address => uint256) private _closestReset;
+    mapping(address => uint256) public closestReset;
 
     function setConfig(
         address account,
@@ -63,17 +63,17 @@ contract Guardian is IGuardian {
             }
         }
         _approvesProgress[account][msg.sender] = newAddress;
-        _closestReset[account] = block.number + _cabinet[account].delay;
+        closestReset[account] = block.number + _cabinet[account].delay;
         emit Approved(account, msg.sender, newAddress);
     }
 
     function resetAccountOwner(address account) public {
         (address newAddress, uint256 progress) = _getApproveProgress(account);
         if (progress >= _cabinet[account].approveThreshold) {
-            if (_closestReset[account] > block.number) {
+            if (closestReset[account] > block.number) {
                 revert("the delay reset time has not yet reached");
             }
-            delete _closestReset[account];
+            delete closestReset[account];
             _resetAccountOwner(account, newAddress);
         } else {
             revert("the threshold value has not been reached");
@@ -88,7 +88,7 @@ contract Guardian is IGuardian {
 
     function clearApproves(address account) public {
         _requireAccountOwner(account);
-        delete _closestReset[account];
+        delete closestReset[account];
         _clearApproves(account);
     }
 
