@@ -1,18 +1,18 @@
-import { Wallet, Signer } from 'ethers'
-import { ethers } from 'hardhat'
 import { expect } from 'chai'
+import { Signer, Wallet } from 'ethers'
 import { parseEther } from 'ethers/lib/utils'
+import { ethers } from 'hardhat'
 import {
-  TSPAccount,
   Guardian,
-  Guardian__factory
+  Guardian__factory,
+  TSPAccount
 } from '../typechain'
 import {
+  DefaultDelayBlock, DefaultPlatformGuardian, DefaultThreshold,
   createAccountOwner,
-  createTSPAccountAndRegister,
-  rethrow,
   createTSPAccount,
-  DefaultDelayBlock, DefaultPlatformGuardian, DefaultThreshold
+  createTSPAccountAndRegister,
+  rethrow
 } from './tsp-utils.test'
 
 describe('Guardian', function () {
@@ -147,6 +147,14 @@ describe('Guardian', function () {
       const { progress } = await guardian.getApproveProgress(_account.address)
       expect(progress).to.equals(2)
       await expect(guardian.resetAccountOwner(_account.address, { gasLimit: 10000000 }).catch(rethrow())).to.revertedWith('the delay reset time has not yet reached')
+      for (let i = 0; i < 100; i++) {
+        await ethers.provider.send('evm_mine', [])
+      }
+      const block = await guardian.closestReset(_account.address)
+      const currentBlock = await ethers.provider.getBlockNumber()
+      expect(block.toNumber()).lessThan(currentBlock)
+      await guardian.resetAccountOwner(_account.address, { gasLimit: 10000000 })
+      expect(accounts[10]).to.equals(await _account.owner())
     })
   })
 })
