@@ -8,6 +8,7 @@
     "hardhat-test": "hardhat test",
     "hardhat-deploy": "hardhat deploy",
     "hardhat-deploy:arbitrum_goerli": "hardhat deploy --network arbitrum_goerli",
+    "hardhat-deploy:arbitrum": "hardhat deploy --network arbitrum",
     "clean": "rm -rf cache artifacts typechain typechain-types",
     "compile": "./scripts/hh-wrapper compile",
     "tsc": "tsc",
