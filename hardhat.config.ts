@@ -16,6 +16,7 @@ if (fs.existsSync(mnemonicFileName)) {
 } else {
   mnemonic = process.env.MNEMONIC ?? mnemonic
 }
+const privateKey = process.env.PRIVATE_KEY ?? ''
 
 function getNetwork1 (url: string): { url: string, accounts: { mnemonic: string } } {
   return {

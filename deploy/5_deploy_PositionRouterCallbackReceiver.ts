@@ -2,7 +2,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { ethers } from 'hardhat'
 
-const deployTestToken: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+const deployPositionRouterCallbackReceiver: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const provider = ethers.provider
   const from = await provider.getSigner().getAddress()
 
@@ -17,4 +17,4 @@ const deployTestToken: DeployFunction = async function (hre: HardhatRuntimeEnvir
   console.log('gas', ret.receipt?.cumulativeGasUsed)
 }
 
-export default deployTestToken
+export default deployPositionRouterCallbackReceiver
