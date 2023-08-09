@@ -151,8 +151,8 @@ describe('Guardian', function () {
         await ethers.provider.send('evm_mine', [])
       }
       const block = await guardian.closestReset(_account.address)
-      const currentBlock = await ethers.provider.getBlockNumber()
-      expect(block.toNumber()).lessThan(currentBlock)
+      const currentBlock = await ethers.provider.getBlock('latest')
+      expect(block.toNumber()).lessThan(currentBlock.timestamp)
       await guardian.resetAccountOwner(_account.address, { gasLimit: 10000000 })
       expect(accounts[10]).to.equals(await _account.owner())
     })
