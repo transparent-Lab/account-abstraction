@@ -63,14 +63,14 @@ contract Guardian is IGuardian {
             }
         }
         _approvesProgress[account][msg.sender] = newAddress;
-        closestReset[account] = block.number + _cabinet[account].delay;
+        closestReset[account] = block.timestamp + _cabinet[account].delay;
         emit Approved(account, msg.sender, newAddress);
     }
 
     function resetAccountOwner(address account) public {
         (address newAddress, uint256 progress) = _getApproveProgress(account);
         if (progress >= _cabinet[account].approveThreshold) {
-            if (closestReset[account] > block.number) {
+            if (closestReset[account] > block.timestamp) {
                 revert("the delay reset time has not yet reached");
             }
             delete closestReset[account];
@@ -112,7 +112,7 @@ contract Guardian is IGuardian {
         address account
     ) private view returns (address first, uint256 progress) {
         IGuardian.GuardianConfig memory config = _cabinet[account];
-        
+
         uint256 n = 0;
         for (uint256 i = 0; i < config.guardians.length; i++) {
             address guardian = config.guardians[i];
