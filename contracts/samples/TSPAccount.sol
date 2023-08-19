@@ -17,15 +17,15 @@ import "../interfaces/IGuardian.sol";
  */
 contract TSPAccount is SimpleAccount, ITSPAccount {
     // the operator can invoke the contract, but cannot modify the owner
-    address private _operator;
+    address public operator;
 
     // a guardian contract through which the owner can modify the guardian and multi-signature rules
-    address private _guardian;
+    address public guardian;
 
     // the inviter of this account
-    address private _inviter;
+    address public inviter;
 
-    mapping(string => string) private _metadata;
+    mapping(string => string) public metadata;
 
     event InviterInitialized(address indexed inviter, address indexed invitee);
 
@@ -43,24 +43,24 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
     function changeOperator(address operator) public onlyOwner {
         // require(operator != address(0), "operator is the zero address");
         // _requireFromEntryPointOrOwner();
-        _operator = operator;
+        operator = operator;
     }
 
     function getGuardian() public view returns (address) {
-        return _guardian;
+        return guardian;
     }
 
     function getOperator() public view returns (address) {
-        return _operator;
+        return operator;
     }
 
     function getInviter() public view returns (address) {
-        return _inviter;
+        return inviter;
     }
 
     function _requireOwnerOrGuardian() internal view {
         require(
-            msg.sender == owner || msg.sender == _guardian,
+            msg.sender == owner || msg.sender == guardian,
             "account: not Owner or Guardian"
         );
     }
@@ -70,7 +70,7 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
         require(
             msg.sender == address(entryPoint()) ||
                 msg.sender == owner ||
-                msg.sender == _operator,
+                msg.sender == operator,
             "account: not Owner or EntryPoint or Operator"
         );
     }
@@ -82,9 +82,9 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
     ) public onlyOwner {
         bytes memory bytesStr = bytes(value);
         if (bytesStr.length == 0) {
-            delete _metadata[key];
+            delete metadata[key];
         }
-        _metadata[key] = value;
+        metadata[key] = value;
         emit SetMetadata(key, value);
     }
 
@@ -92,7 +92,7 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
     function getMetadata(
         string memory key
     ) public view onlyOwner returns (string memory value) {
-        value = _metadata[key];
+        value = metadata[key];
         if (bytes(value).length == 0) {
             return "";
         }
@@ -113,7 +113,7 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
     ) public initializer {
         _initialize(anOwner);
         _changeGuardian(guardian);
-        IGuardian(_guardian).setConfig(
+        IGuardian(guardian).setConfig(
             address(this),
             IGuardian.GuardianConfig(guardians, threshold, guardianDelay)
         );
@@ -121,7 +121,7 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
             // self-invite is not allowed
             require(inviter != address(this), "inviter is oneself");
         }
-        _inviter = inviter;
+        inviter = inviter;
         emit InviterInitialized(inviter, address(this));
     }
 
@@ -131,7 +131,7 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
 
     function _changeGuardian(address guardian) internal {
         require(guardian != address(0), "guardian is the zero address");
-        _guardian = guardian;
+        guardian = guardian;
     }
 
     /**
@@ -165,6 +165,6 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
     }
 
     function getVersion() public pure virtual returns (uint) {
-        return 1;
+        return 3;
     }
 }
