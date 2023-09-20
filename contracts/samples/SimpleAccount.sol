@@ -54,19 +54,26 @@ contract SimpleAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, In
     /**
      * execute a transaction (called directly from owner, or by entryPoint)
      */
-    function execute(address dest, uint256 value, bytes calldata func) external virtual {
+    function execute(address dest, uint256 value, bytes calldata func) external {
         _requireFromEntryPointOrOwner();
         _call(dest, value, func);
     }
 
     /**
      * execute a sequence of transactions
+     * @dev to reduce gas consumption for trivial case (no value), use a zero-length array to mean zero value
      */
-    function executeBatch(address[] calldata dest, uint256[] calldata value, bytes[] calldata func) external virtual{
+    function executeBatch(address[] calldata dest, uint256[] calldata value, bytes[] calldata func) external {
         _requireFromEntryPointOrOwner();
-        require(dest.length == func.length && dest.length == value.length, "wrong array lengths");
-        for (uint256 i = 0; i < dest.length; i++) {
-            _call(dest[i], value[i], func[i]);
+        require(dest.length == func.length && (value.length == 0 || value.length == func.length), "wrong array lengths");
+        if (value.length == 0) {
+            for (uint256 i = 0; i < dest.length; i++) {
+                _call(dest[i], 0, func[i]);
+            }
+        } else {
+            for (uint256 i = 0; i < dest.length; i++) {
+                _call(dest[i], value[i], func[i]);
+            }
         }
     }
 
