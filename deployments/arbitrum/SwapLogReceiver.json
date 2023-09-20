@@ -1,0 +1,85 @@
+{
+  "address": "0xe3210b7BFec6ccD9cf3b5AcADB54Bc08e010C9F0",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "tokenIn",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "tokenOut",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "OneInchSwap",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "tokenIn",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "tokenOut",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "oneInchLogReceiver",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x815a705f64837ba7a00572f6a4739f188ed6566b4fa55053f23acf5d9bae0b4e",
+  "receipt": {
+    "to": "0x4e59b44847b379578588920cA78FbF26c0B4956C",
+    "from": "0x373D3Fa42A2eAA812652507E99b8369eaEEcEaDe",
+    "contractAddress": null,
+    "transactionIndex": 1,
+    "gasUsed": "827780",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x2e776521ee2ea5cc5c9c681027281ec6d1c5fbbd3d8e05d1d641e2de42565bbe",
+    "transactionHash": "0x815a705f64837ba7a00572f6a4739f188ed6566b4fa55053f23acf5d9bae0b4e",
+    "logs": [],
+    "blockNumber": 128454574,
+    "cumulativeGasUsed": "827780",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 2,
+  "solcInputHash": "a5a3b2d891b0e227193845c3f946bc66",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.0+commit.26b70077\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenIn\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"tokenOut\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"OneInchSwap\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"tokenIn\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"tokenOut\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"oneInchLogReceiver\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"contracts/oneinch/SwapLogReceiver.sol\":\"SwapLogReceiver\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/oneinch/SwapLogReceiver.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\n\\r\\npragma solidity ^0.6.0;\\r\\n\\r\\ninterface ISwapLogReceiver {\\r\\n    function oneInchLogReceiver(address tokenIn, address tokenOut, uint256 amount) external;\\r\\n}\\r\\n\\r\\ncontract SwapLogReceiver is ISwapLogReceiver {\\r\\n    event OneInchSwap(\\r\\n        address tokenIn,\\r\\n        address tokenOut,\\r\\n        uint256 amount\\r\\n    );\\r\\n\\r\\n    function oneInchLogReceiver(address tokenIn, address tokenOut, uint256 amount) override external {\\r\\n        emit OneInchSwap(tokenIn, tokenOut, amount);\\r\\n    }\\r\\n}\\r\\n\",\"keccak256\":\"0x46336e2f3aa052d297dcaf6b9c935e91dafed67815575fa56bde20df12f57151\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610178806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063d083ac0014610030575b600080fd5b61009c6004803603606081101561004657600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff1690602001909291908035906020019092919050505061009e565b005b7fdca4e935c39f0a9c0bfa96a7b30ad185381c3840e43437a2d859753bf36ecbb7838383604051808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001828152602001935050505060405180910390a150505056fea26469706673582212208c9ed3e0444b367d0d61c8f980fd49577af421993c963bfcd05ae496ab99170964736f6c63430006000033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c8063d083ac0014610030575b600080fd5b61009c6004803603606081101561004657600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff1690602001909291908035906020019092919050505061009e565b005b7fdca4e935c39f0a9c0bfa96a7b30ad185381c3840e43437a2d859753bf36ecbb7838383604051808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001828152602001935050505060405180910390a150505056fea26469706673582212208c9ed3e0444b367d0d61c8f980fd49577af421993c963bfcd05ae496ab99170964736f6c63430006000033",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

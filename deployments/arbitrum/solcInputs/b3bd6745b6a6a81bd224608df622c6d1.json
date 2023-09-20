@@ -1,0 +1,38 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/gmx/PositionRouterCallbackReceiver.sol": {
+      "content": "// SPDX-License-Identifier: MIT\r\n\r\npragma solidity ^0.6.0;\r\n\r\ninterface IPositionRouterCallbackReceiver {\r\n    function gmxPositionCallback(bytes32 positionKey, bool isExecuted, bool isIncrease) external;\r\n}\r\n\r\ncontract PositionRouterCallbackReceiver is IPositionRouterCallbackReceiver {\r\n    address public positionRouter = 0xb87a436B93fFE9D75c5cFA7bAcFff96430b09868;\r\n    event CallbackCalled(\r\n        bytes32 positionKey,\r\n        bool isExecuted,\r\n        bool isIncrease\r\n    );\r\n\r\n    function gmxPositionCallback(bytes32 positionKey, bool isExecuted, bool isIncrease) override external {\r\n        require(msg.sender == positionRouter, \"PositionRouterCallbackReceiver: forbidden\");\r\n        emit CallbackCalled(positionKey, isExecuted, isIncrease);\r\n    }\r\n}\r\n"
+    },
+    "contracts/oneinch/SwapLogReceiver.sol": {
+      "content": "// SPDX-License-Identifier: MIT\r\n\r\npragma solidity ^0.6.0;\r\n\r\ninterface ISwapLogReceiver {\r\n    function oneInchLogReceiver(address tokenIn, address tokenOut, uint256 amount) external;\r\n}\r\n\r\ncontract SwapLogReceiver is ISwapLogReceiver {\r\n    address public positionRouter = 0xb87a436B93fFE9D75c5cFA7bAcFff96430b09868;\r\n    event OneInchSwap(\r\n        address tokenIn,\r\n        address tokenOut,\r\n        uint256 amount\r\n    );\r\n\r\n    function oneInchLogReceiver(address tokenIn, address tokenOut, uint256 amount) override external {\r\n        emit OneInchSwap(tokenIn, tokenOut, amount);\r\n    }\r\n}\r\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

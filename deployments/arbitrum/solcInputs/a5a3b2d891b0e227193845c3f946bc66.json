@@ -1,0 +1,35 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/oneinch/SwapLogReceiver.sol": {
+      "content": "// SPDX-License-Identifier: MIT\r\n\r\npragma solidity ^0.6.0;\r\n\r\ninterface ISwapLogReceiver {\r\n    function oneInchLogReceiver(address tokenIn, address tokenOut, uint256 amount) external;\r\n}\r\n\r\ncontract SwapLogReceiver is ISwapLogReceiver {\r\n    event OneInchSwap(\r\n        address tokenIn,\r\n        address tokenOut,\r\n        uint256 amount\r\n    );\r\n\r\n    function oneInchLogReceiver(address tokenIn, address tokenOut, uint256 amount) override external {\r\n        emit OneInchSwap(tokenIn, tokenOut, amount);\r\n    }\r\n}\r\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

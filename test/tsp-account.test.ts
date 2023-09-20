@@ -9,9 +9,9 @@ import {
   Guardian,
   TestUtil,
   TestUtil__factory,
-  TSPAccount__factory
+  TSPAccount__factory, EntryPoint
 } from '../typechain'
-import { fillUserOpDefaults, getUserOpHash, packUserOp, signUserOp } from './UserOp'
+import { DefaultsForUserOp, fillUserOpDefaults, getUserOpHash, packUserOp, signUserOp } from './UserOp'
 import { UserOperation } from './UserOperation'
 import {
   AddressZero,
@@ -23,7 +23,7 @@ import {
   getBalance,
   isDeployed,
 
-  DefaultThreshold, DefaultDelayBlock, DefaultPlatformGuardian
+  DefaultThreshold, DefaultDelayBlock, DefaultPlatformGuardian, deployEntryPoint, fund
 } from './tsp-utils.test'
 
 describe('TSPAccount', function () {
@@ -89,6 +89,7 @@ describe('TSPAccount', function () {
     let userOpHash: string
     let preBalance: number
     let expectedPay: number
+    let myEntryPoint: EntryPoint
 
     const actualGasPrice = 1e9
 
@@ -101,7 +102,7 @@ describe('TSPAccount', function () {
       const verificationGasLimit = 100000
       const maxFeePerGas = 3e9
       const chainId = await ethers.provider.getNetwork().then(net => net.chainId)
-
+      myEntryPoint = await deployEntryPoint()
       userOp = signUserOp(fillUserOpDefaults({
         sender: account.address,
         callGasLimit,
@@ -116,6 +117,35 @@ describe('TSPAccount', function () {
       preBalance = await getBalance(account.address)
       const ret = await account.validateUserOp(userOp, userOpHash, expectedPay, { gasPrice: actualGasPrice })
       await ret.wait()
+    })
+
+    it('handResetOwnerOp', async () => {
+      const ownerAccount = await createAccountOwner()
+      const aaAccount = (await createTSPAccount(ethers.provider.getSigner(), await ownerAccount.getAddress(), myEntryPoint.address, guardian, inviter)).proxy
+      await fund(aaAccount)
+      const newOwnerAddress = accounts[1]
+      const callData = aaAccount.interface.encodeFunctionData('resetOwner', [newOwnerAddress])
+      const chainId = await ethers.provider.getNetwork().then(net => net.chainId)
+      // print('execCallData: ${bytesToHex(execCallData)}}');
+      const userOp: UserOperation = {
+        ...DefaultsForUserOp,
+        sender: aaAccount.address,
+        callGasLimit: 1e5,
+        maxFeePerGas: 1,
+        nonce: await myEntryPoint.getNonce(aaAccount.address, 0),
+        verificationGasLimit: 1e5,
+        callData: callData
+      }
+      console.log('myEntryPoint address: ', myEntryPoint.address)
+      const userOpTest = signUserOp(userOp, ownerAccount, myEntryPoint.address, chainId)
+      console.log('old owner: ', await aaAccount.owner())
+      const beneficiaryAddress = createAddress()
+      await myEntryPoint.handleOps([userOpTest], beneficiaryAddress, {
+        gasLimit: 1e7
+      }).then(async t => await t.wait())
+      const newOwner = await aaAccount.owner()
+      console.log('new owner: ', newOwner)
+      expect(newOwner).to.eq(newOwnerAddress)
     })
 
     it('should pay', async () => {
