@@ -1,6 +1,5 @@
-// SPDX-License-Identifier: MIT
-
-pragma solidity ^0.6.0;
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.12;
 
 interface IPositionRouterCallbackReceiver {
     function gmxPositionCallback(bytes32 positionKey, bool isExecuted, bool isIncrease) external;

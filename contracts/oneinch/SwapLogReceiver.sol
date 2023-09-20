@@ -1,6 +1,5 @@
-// SPDX-License-Identifier: MIT
-
-pragma solidity ^0.6.0;
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.12;
 
 interface ISwapLogReceiver {
     function oneInchLogReceiver(address tokenIn, address tokenOut, uint256 amount) external;

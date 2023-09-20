@@ -6,8 +6,8 @@ pragma solidity ^0.8.12;
 /* solhint-disable reason-string */
 
 import "./interfaces/ITSPAccount.sol";
-import "./interfaces/IGuardian.sol";
 import "../samples/SimpleAccount.sol";
+import "./interfaces/IGuardian.sol";
 
 /**
  * minimal account.
