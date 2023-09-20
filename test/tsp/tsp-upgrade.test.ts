@@ -9,7 +9,7 @@ import {
   TSPAccountFactory__factory,
   TSPAccountV2__factory,
   TSPAccount__factory
-} from '../typechain'
+} from '../../typechain'
 import {
   DefaultDelayBlock, DefaultPlatformGuardian,
   DefaultThreshold,

@@ -9,7 +9,7 @@ import {
   TestToken__factory
   // TestUtil,
   // TestUtil__factory,
-} from '../typechain'
+} from '../../typechain'
 import { DefaultDelayBlock, createAccountOwner, createAddress, ONE_ETH, createTSPAccount } from './tsp-utils.test'
 
 describe('TSPAccount', function () {

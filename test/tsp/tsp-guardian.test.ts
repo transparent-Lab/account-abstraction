@@ -6,7 +6,7 @@ import {
   Guardian,
   Guardian__factory,
   TSPAccount
-} from '../typechain'
+} from '../../typechain'
 import {
   DefaultDelayBlock, DefaultPlatformGuardian, DefaultThreshold,
   createAccountOwner,

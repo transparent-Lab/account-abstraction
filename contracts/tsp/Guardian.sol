@@ -7,8 +7,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "../interfaces/IAccount.sol";
-import "../interfaces/ITSPAccount.sol";
-import "../interfaces/IGuardian.sol";
+import "../tsp/interfaces/ITSPAccount.sol";
+import "../tsp/interfaces/IGuardian.sol";
 
 contract Guardian is IGuardian {
     using SafeMath for uint256;

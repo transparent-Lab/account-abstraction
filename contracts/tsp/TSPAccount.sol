@@ -5,9 +5,9 @@ pragma solidity ^0.8.12;
 /* solhint-disable no-inline-assembly */
 /* solhint-disable reason-string */
 
-import "../interfaces/ITSPAccount.sol";
-import "./SimpleAccount.sol";
-import "../interfaces/IGuardian.sol";
+import "./interfaces/ITSPAccount.sol";
+import "./interfaces/IGuardian.sol";
+import "../samples/SimpleAccount.sol";
 
 /**
  * minimal account.
@@ -41,7 +41,7 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
     }
 
     function changeOperator(address _operator) public {
-        require(operator != address(0), "operator is the zero address");
+        require(_operator != address(0), "operator is the zero address");
         _requireFromEntryPointOrOwner();
         operator = _operator;
     }

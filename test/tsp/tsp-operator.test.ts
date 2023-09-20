@@ -1,7 +1,7 @@
 import { Signer } from 'ethers'
 import { ethers } from 'hardhat'
 import { expect } from 'chai'
-import { Guardian, Guardian__factory } from '../typechain'
+import { Guardian, Guardian__factory } from '../../typechain'
 import {
   ONE_ETH,
   TWO_ETH,

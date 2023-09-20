@@ -10,9 +10,9 @@ import {
   TestUtil,
   TestUtil__factory,
   TSPAccount__factory, EntryPoint
-} from '../typechain'
-import { DefaultsForUserOp, fillUserOpDefaults, getUserOpHash, packUserOp, signUserOp } from './UserOp'
-import { UserOperation } from './UserOperation'
+} from '../../typechain'
+import { DefaultsForUserOp, fillUserOpDefaults, getUserOpHash, packUserOp, signUserOp } from '../UserOp'
+import { UserOperation } from '../UserOperation'
 import {
   AddressZero,
   HashZero,

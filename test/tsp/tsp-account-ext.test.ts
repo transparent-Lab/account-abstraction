@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { ethers } from 'hardhat'
-import { Guardian, Guardian__factory, TSPAccount } from '../typechain'
+import { Guardian, Guardian__factory, TSPAccount } from '../../typechain'
 import { createTSPAccount } from './tsp-utils.test'
 
 describe('TSPAccount Extension Functions Test', function () {

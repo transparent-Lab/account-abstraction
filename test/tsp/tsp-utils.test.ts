@@ -5,8 +5,8 @@ import {
   TSPAccountFactory__factory,
   TSPAccount__factory, TSPAccountFactory,
   Guardian
-} from '../typechain'
-export * from './testutils'
+} from '../../typechain'
+export * from '../testutils'
 
 export const DefaultPlatformGuardian = ethers.provider.getSigner().getAddress()
 
