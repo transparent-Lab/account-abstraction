@@ -16,7 +16,7 @@ if (fs.existsSync(mnemonicFileName)) {
 } else {
   mnemonic = process.env.MNEMONIC ?? mnemonic
 }
-const privateKey = process.env.PRIVATE_KEY ?? ''
+// const privateKey = process.env.PRIVATE_KEY ?? ''
 
 function getNetwork1 (url: string): { url: string, accounts: { mnemonic: string } } {
   return {
@@ -48,8 +48,6 @@ const config: HardhatUserConfig = {
       settings: {
         optimizer: { enabled: true, runs: 1000000 }
       }
-    }, {
-      version: '0.6.0'
     }],
     overrides: {
       'contracts/core/EntryPoint.sol': optimizedComilerSettings,
