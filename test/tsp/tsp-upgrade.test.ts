@@ -35,7 +35,7 @@ describe('TSPAccount Upgrade', function () {
     const addr1 = await factory.getAddress(accountOwner.address, 0, guardian.address, DefaultThreshold, DefaultDelayBlock, [DefaultPlatformGuardian], inviter)
     const account = TSPAccount__factory.connect(addr1, accountOwner)
     await signer.sendTransaction({ from: accounts[0], to: accountOwner.address, value: parseEther('1') })
-    expect(await account.connect(signer).getVersion()).to.be.equals(1)
+    expect(await account.connect(signer).getVersion()).to.be.equals(3)
     const account2 = await new TSPAccountV2__factory(signer).deploy(entryPoint)
     await account.upgradeTo(account2.address)
     expect(await account.getVersion()).to.be.equals(2)
@@ -51,7 +51,7 @@ describe('TSPAccount Upgrade', function () {
     const _guardian = await new Guardian__factory(signer).deploy()
     await account.changeGuardian(_guardian.address, { gasLimit: 10000000 })
     // await guardian.connect(accountOwner).register(accountAddress)
-    expect(await account.connect(signer).getVersion()).to.be.equals(1)
+    expect(await account.connect(signer).getVersion()).to.be.equals(3)
 
     const account2 = await new TSPAccountV2__factory(signer).deploy(entryPoint)
     await account.upgradeTo(account2.address)

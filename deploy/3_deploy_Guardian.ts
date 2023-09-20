@@ -10,7 +10,7 @@ const deployGuardian: DeployFunction = async function (hre: HardhatRuntimeEnviro
     'Guardian', {
       from,
       args: [],
-      gasLimit: 2e8,
+      gasLimit: 2e6,
       deterministicDeployment: true
     })
   console.log('==Guardian addr=', ret.address)

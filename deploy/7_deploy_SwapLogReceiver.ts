@@ -10,7 +10,7 @@ const deploySwapLogReceiver: DeployFunction = async function (hre: HardhatRuntim
     'SwapLogReceiver', {
       from,
       args: [],
-      gasLimit: 8e8,
+      gasLimit: 2e6,
       deterministicDeployment: true
     })
   console.log('==SwapLogReceiver addr=', ret.address)

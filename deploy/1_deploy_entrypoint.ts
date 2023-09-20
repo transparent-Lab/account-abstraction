@@ -7,35 +7,33 @@ const deployEntryPoint: DeployFunction = async function (hre: HardhatRuntimeEnvi
   const provider = ethers.provider
   const from = await provider.getSigner().getAddress()
   await new Create2Factory(ethers.provider).deployFactory()
-  console.log('signer ', await provider.getSigner().getAddress())
-  console.log('balance ', ethers.utils.formatEther(await provider.getBalance(from)))
+
   const ret = await hre.deployments.deploy(
     'EntryPoint', {
       from,
       args: [],
-      gasLimit: 6e8,
+      gasLimit: 6e6,
       deterministicDeployment: true
     })
   console.log('==entrypoint addr=', ret.address)
-  console.log('gas', ret.receipt?.cumulativeGasUsed)
-  /*
-    const entryPointAddress = ret.address
-    const w = await hre.deployments.deploy(
-      'SimpleAccount', {
-        from,
-        args: [entryPointAddress, from],
-        gasLimit: 2e6,
-        deterministicDeployment: true
-      })
-
-    console.log('== wallet=', w.address)
-
-    const t = await hre.deployments.deploy('TestCounter', {
+/*
+  const entryPointAddress = ret.address
+  const w = await hre.deployments.deploy(
+    'SimpleAccount', {
       from,
+      args: [entryPointAddress, from],
+      gasLimit: 2e6,
       deterministicDeployment: true
     })
-    console.log('==testCounter=', t.address)
-    */
+
+  console.log('== wallet=', w.address)
+
+  const t = await hre.deployments.deploy('TestCounter', {
+    from,
+    deterministicDeployment: true
+  })
+  console.log('==testCounter=', t.address)
+  */
 }
 
 export default deployEntryPoint
