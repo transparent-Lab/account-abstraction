@@ -54,7 +54,7 @@ contract SimpleAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, In
     /**
      * execute a transaction (called directly from owner, or by entryPoint)
      */
-    function execute(address dest, uint256 value, bytes calldata func) external {
+    function execute(address dest, uint256 value, bytes calldata func) virtual external {
         _requireFromEntryPointOrOwner();
         _call(dest, value, func);
     }
@@ -63,7 +63,7 @@ contract SimpleAccount is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, In
      * execute a sequence of transactions
      * @dev to reduce gas consumption for trivial case (no value), use a zero-length array to mean zero value
      */
-    function executeBatch(address[] calldata dest, uint256[] calldata value, bytes[] calldata func) external {
+    function executeBatch(address[] calldata dest, uint256[] calldata value, bytes[] calldata func) virtual external {
         _requireFromEntryPointOrOwner();
         require(dest.length == func.length && (value.length == 0 || value.length == func.length), "wrong array lengths");
         if (value.length == 0) {

@@ -40,10 +40,10 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
         emit ResetOwner(address(this), owner, newOwner);
     }
 
-    function changeOperator(address operator) public onlyOwner {
-        // require(operator != address(0), "operator is the zero address");
-        // _requireFromEntryPointOrOwner();
-        operator = operator;
+    function changeOperator(address _operator) public {
+        require(operator != address(0), "operator is the zero address");
+        _requireFromEntryPointOrOwner();
+        operator = _operator;
     }
 
     function getGuardian() public view returns (address) {
@@ -105,33 +105,33 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
      */
     function initialize(
         address anOwner,
-        address guardian,
+        address _guardian,
         uint256 threshold,
         uint256 guardianDelay,
         address[] memory guardians,
-        address inviter
+        address _inviter
     ) public initializer {
         _initialize(anOwner);
-        _changeGuardian(guardian);
-        IGuardian(guardian).setConfig(
+        _changeGuardian(_guardian);
+        IGuardian(_guardian).setConfig(
             address(this),
             IGuardian.GuardianConfig(guardians, threshold, guardianDelay)
         );
-        if(inviter != address(0)) {
+        if(_inviter != address(0)) {
             // self-invite is not allowed
-            require(inviter != address(this), "inviter is oneself");
+            require(_inviter != address(this), "inviter is oneself");
         }
-        inviter = inviter;
-        emit InviterInitialized(inviter, address(this));
+        inviter = _inviter;
+        emit InviterInitialized(_inviter, address(this));
     }
 
-    function changeGuardian(address guardian) public onlyOwner {
-        _changeGuardian(guardian);
+    function changeGuardian(address _guardian) public onlyOwner {
+        _changeGuardian(_guardian);
     }
 
-    function _changeGuardian(address guardian) internal {
-        require(guardian != address(0), "guardian is the zero address");
-        guardian = guardian;
+    function _changeGuardian(address _guardian) internal {
+        require(_guardian != address(0), "guardian is the zero address");
+        guardian = _guardian;
     }
 
     /**
@@ -149,11 +149,7 @@ contract TSPAccount is SimpleAccount, ITSPAccount {
     /**
      * execute a sequence of transactions
      */
-    function executeBatch(
-        address[] calldata dest,
-        uint256[] calldata value,
-        bytes[] calldata func
-    ) external override {
+    function executeBatch(address[] calldata dest, uint256[] calldata value, bytes[] calldata func)  external override {
         _requireFromEntryPointOrOwnerOrOperator();
         require(
             dest.length == func.length && dest.length == value.length,
